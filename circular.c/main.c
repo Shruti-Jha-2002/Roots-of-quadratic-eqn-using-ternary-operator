@@ -1,74 +1,78 @@
+// C program for the above operation
 #include <stdio.h>
 #include <stdlib.h>
-#define max 5
-int f=-1;
-int r=-1;
-int Cqueue[max];
-void enqueue(int ele){
-    if(f==-1 && r==-1){
-        f=r=0;
-        Cqueue[r]=ele;
-    }
-    else if((r+1)%max==f){
-        printf("Overflow. The queue is Full\n");
-    }
-    else{
-        r=(r+1)%max;
-        Cqueue[r]=ele;
-    }
+
+// Structure of a linked list node
+struct node {
+	int info;
+	struct node* next;
+};
+
+// Pointer to last node in the list
+struct node* last = NULL;
+
+// Function to insert a node in the
+// starting of the list
+void insertAtFront(int data)
+{
+	// Initialize a new node
+	struct node* temp;
+	temp = (struct node*)malloc(sizeof(struct node));
+
+	// If the new node is the only
+	// node in the list
+	if (last == NULL) {
+		temp->info = data;
+		temp->next = temp;
+		last = temp;
+	}
+
+	// Else last node contains the
+	// reference of the new node and
+	// new node contains the reference
+	// of the previous first node
+	else {
+		temp->info = data;
+		temp->next = last->next;
+
+		// last node now has reference
+		// of the new node temp
+		last->next = temp;
+	}
 }
 
-int dequeue(){
-    if(r==-1 && f==-1){
-        printf("Underflow. The queue is Empty.\n");
-    }
-    else if(f==r){
-        printf("The dequeued element is %d\n",Cqueue[f]);
-        f=r=-1;
-    }
-    else{
-        printf("The dequeued element is %d\n",Cqueue[f]);
-        f=(f+1)%max;
-    }
+// Function to print the list
+void viewList()
+{
+	// If list is empty
+	if (last == NULL)
+		printf("\nList is empty\n");
+
+	// Else print the list
+	else {
+		struct node* temp;
+		temp = last->next;
+
+		// While first node is not
+		// reached again, print,
+		// since the list is circular
+		do {
+			printf("\nData = %d", temp->info);
+			temp = temp->next;
+		} while (temp != last->next);
+	}
 }
-void display(){
-    if(f==-1 && r==-1){
-        printf("The Queue is Empty.\n");
-    }
-    else{
-        int i=f;
-        while(i!=r){
-            printf("%d ",Cqueue[i]);
-            i=(i+1)%max;
-        }
-        printf("%d",Cqueue[r]);
-        printf("\n");
-    }
-}
+
+// Driver Code
 int main()
 {
-    char c='Y';
-    int d;
-    while(c!='q'){
-        printf("1: Insert\n");
-        printf("2: Delete\n");
-        printf("3: Display\n");
-        printf("Press 'q' to quit %c\n",c);
-        scanf(" %c",&c);
-        switch(c){
-            case '1':
-                printf("Enter the element to be inserted: ");
-                scanf("%d",&d);
-                enqueue(d);
-                break;
-            case '2':
-                dequeue();
-                break;
-            case '3':
-                display();
-                break;
-        }
-    }
-    printf("Thank you");
-    return 0;
+	// Function Call
+	insertAtFront(10);
+	insertAtFront(20);
+	insertAtFront(30);
+
+	// Print list
+	viewList();
+
+	return 0;
 }
